@@ -337,7 +337,7 @@ int32_t main (int32_t iArgC, char* pArgV[]) {
   ISVCDecoder* pDecoder = NULL;
 
   SDecodingParam sDecParam = {0};
-  string strInputFile (""), strOutputFile (""), strOptionFile (""), strLengthFile ("");
+  char strInputFile[50]="", strOutputFile[50]="", strOptionFile[50]="", strLengthFile[50]="";
   int iLevelSetting = (int) WELS_LOG_WARNING;
 
   sDecParam.sVideoProperty.size = sizeof (sDecParam.sVideoProperty);
@@ -362,9 +362,9 @@ int32_t main (int32_t iArgC, char* pArgV[]) {
         long nRd = cReadCfg.ReadLine (&strTag[0]);
         if (nRd > 0) {
           if (strTag[0].compare ("InputFile") == 0) {
-            strInputFile = strTag[1];
+            strcpy(strInputFile, strTag[1].c_str());
           } else if (strTag[0].compare ("OutputFile") == 0) {
-            strOutputFile = strTag[1];
+            strcpy(strOutputFile, strTag[1].c_str());
           } else if (strTag[0].compare ("RestructionFile") == 0) {
             strReconFile = strTag[1];
             int32_t iLen = (int32_t)strReconFile.length();
@@ -387,21 +387,21 @@ int32_t main (int32_t iArgC, char* pArgV[]) {
           }
         }
       }
-      if (strOutputFile.empty()) {
+      if (strlen(strOutputFile) == 0) {
         printf ("No output file specified in configuration file.\n");
         return 1;
       }
     } else if (strstr (pArgV[1],
                        ".264")) { // no output dump yuv file, just try to render the decoded pictures //confirmed_safe_unsafe_usage
-      strInputFile = pArgV[1];
+      strcpy(strInputFile, pArgV[1]);
       sDecParam.eOutputColorFormat = videoFormatI420;
       sDecParam.uiTargetDqLayer = (uint8_t) - 1;
       sDecParam.eEcActiveIdc = ERROR_CON_SLICE_COPY;
       sDecParam.sVideoProperty.eVideoBsType = VIDEO_BITSTREAM_DEFAULT;
     }
   } else { //iArgC > 2
-    strInputFile = pArgV[1];
-    strOutputFile = pArgV[2];
+    strcpy(strInputFile, pArgV[1]);
+    strcpy(strOutputFile, pArgV[2]);
     sDecParam.eOutputColorFormat = videoFormatI420;
     sDecParam.uiTargetDqLayer = (uint8_t) - 1;
     sDecParam.eEcActiveIdc = ERROR_CON_SLICE_COPY;
@@ -412,7 +412,7 @@ int32_t main (int32_t iArgC, char* pArgV[]) {
 
         if (!strcmp (cmd, "-options")) {
           if (i + 1 < iArgC)
-            strOptionFile = pArgV[++i];
+            strcpy(strOptionFile, pArgV[++i]);
           else {
             printf ("options file not specified.\n");
             return 1;
@@ -426,7 +426,7 @@ int32_t main (int32_t iArgC, char* pArgV[]) {
           }
         } else if (!strcmp (cmd, "-length")) {
           if (i + 1 < iArgC)
-            strLengthFile = pArgV[++i];
+            strcpy(strLengthFile, pArgV[++i]);
           else {
             printf ("lenght file not specified.\n");
             return 1;
@@ -435,13 +435,13 @@ int32_t main (int32_t iArgC, char* pArgV[]) {
       }
     }
 
-    if (strOutputFile.empty()) {
+    if (strlen(strOutputFile) == 0) {
       printf ("No output file specified in configuration file.\n");
       return 1;
     }
   }
 
-  if (strInputFile.empty()) {
+  if (strlen(strInputFile)==0) {
     printf ("No input file specified in configuration file.\n");
     return 1;
   }
@@ -467,9 +467,9 @@ int32_t main (int32_t iArgC, char* pArgV[]) {
   int32_t iHeight = 0;
 
 
-  H264DecodeInstance (pDecoder, strInputFile.c_str(), !strOutputFile.empty() ? strOutputFile.c_str() : NULL, iWidth,
+  H264DecodeInstance (pDecoder, strInputFile, (strlen(strOutputFile)>0) ? strOutputFile : NULL, iWidth,
                       iHeight,
-                      (!strOptionFile.empty() ? strOptionFile.c_str() : NULL), (!strLengthFile.empty() ? strLengthFile.c_str() : NULL));
+                      ((strlen(strOptionFile)>0) ? strOptionFile : NULL), ((strlen(strLengthFile)>0) ? strLengthFile : NULL));
 
   if (sDecParam.pFileNameRestructed != NULL) {
     delete []sDecParam.pFileNameRestructed;
