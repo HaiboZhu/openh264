@@ -58,13 +58,16 @@ class CWelsList {
  public:
   CWelsList() {
     m_iCurrentNodeCount = 0;
-    m_iMaxNodeCount = 50;
-    m_pCurrentList = static_cast<SNode<TNodeType>*> (malloc (m_iMaxNodeCount * sizeof (SNode<TNodeType>)));
+    m_iMaxNodeCount = 0;
+    m_pCurrentList = NULL;
     //here using array storage to simulate list is to avoid the frequent malloc/free of Nodes which may cause fragmented memory
     ResetStorage();
   };
+
   ~CWelsList() {
-    free (m_pCurrentList);
+      if (m_pCurrentList != NULL) {
+          free (m_pCurrentList);
+      }
   };
 
   int32_t size() {
@@ -72,17 +75,14 @@ class CWelsList {
   }
 
   bool push_back (TNodeType* pNode) {
-    m_pCurrent->pPointer = pNode;
-    if (0 == m_iCurrentNodeCount) {
-      m_pFirst = m_pCurrent;
-    }
-
-    m_iCurrentNodeCount++;
     if (m_iCurrentNodeCount == m_iMaxNodeCount) {
       if (!ExpandList()) {
         return false;
       }
     }
+    m_pCurrent->pPointer = pNode;
+
+    m_iCurrentNodeCount++;
 
     SNode<TNodeType>* pNext = FindNextStorage();
     m_pCurrent->pNextNode = pNext;
@@ -153,29 +153,34 @@ class CWelsList {
 
  private:
   bool ExpandList() {
-    SNode<TNodeType>* tmpCurrentList = static_cast<SNode<TNodeType>*> (malloc (m_iMaxNodeCount * 2 * sizeof (
+    int32_t iTmpMaxNodeCount = m_iMaxNodeCount == 0 ? 50 : m_iMaxNodeCount * 2;
+    SNode<TNodeType>* tmpCurrentList = static_cast<SNode<TNodeType>*> (malloc (iTmpMaxNodeCount * sizeof (
                                          SNode<TNodeType>)));
     if (tmpCurrentList == NULL) {
       return false;
     }
-    InitStorage (tmpCurrentList, (m_iMaxNodeCount * 2) - 1);
+    InitStorage (tmpCurrentList, iTmpMaxNodeCount - 1);
 
     SNode<TNodeType>* pTemp = m_pFirst;
     for (int i = 0; ((i < m_iMaxNodeCount) && pTemp); i++) {
       tmpCurrentList[i].pPointer = pTemp->pPointer;
       pTemp = pTemp->pNextNode;
     }
-
-    free (m_pCurrentList);
+    if (m_pCurrentList != NULL) {
+      free (m_pCurrentList);
+    }
     m_pCurrentList = tmpCurrentList;
     m_iCurrentNodeCount = m_iMaxNodeCount;
-    m_iMaxNodeCount = m_iMaxNodeCount * 2;
+    m_iMaxNodeCount = iTmpMaxNodeCount;
     m_pFirst = m_pCurrentList;
-    m_pCurrent = & (m_pCurrentList[m_iCurrentNodeCount - 1]);
+    m_pCurrent = & (m_pCurrentList[m_iCurrentNodeCount]);
     return true;
   }
 
   void InitStorage (SNode<TNodeType>* pList, const int32_t iMaxIndex) {
+    if (pList == NULL) {
+      return;
+    }
     pList[0].pPrevNode = NULL;
     pList[0].pPointer = NULL;
     pList[0].pNextNode = & (pList[1]);
@@ -214,7 +219,9 @@ class CWelsList {
   void ResetStorage() {
     m_pFirst = NULL;
     m_pCurrent = m_pCurrentList;
-    InitStorage (m_pCurrentList, m_iMaxNodeCount - 1);
+    if (m_pCurrentList != NULL) {
+      InitStorage (m_pCurrentList, m_iMaxNodeCount - 1);
+    }
   }
 
   int32_t m_iCurrentNodeCount;
