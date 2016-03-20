@@ -44,6 +44,58 @@
 
 #define MAX_LOG_SIZE    1024
 #define MAX_MBS_PER_FRAME 36864 //in accordance with max level support in Rec
+
+#define CM_LOG_IF(mask, level, condition, str) \
+    if (condition) UTIL_ADAPTER_TRACE(mask, level, str)
+
+#define CM_IF_ERROR_TRACE(condition, str)   CM_LOG_IF(CM_TRACE_LEVEL_ERROR, "ERROR: ", condition, str<<FILE_LINE)
+#define CM_IF_WARNING_TRACE(condition, str) CM_LOG_IF(CM_TRACE_LEVEL_WARNING, "WARNING: ", condition, str<<FILE_LINE)
+#define CM_IF_INFO_TRACE(condition, str)    CM_LOG_IF(CM_TRACE_LEVEL_INFO, "INFO: ", condition, str)
+#define CM_IF_DEBUG_TRACE(condition, str)   CM_LOG_IF(CM_TRACE_LEVEL_DEBUG, "DEBUG: ", condition, str)
+#define CM_IF_DETAIL_TRACE(condition, str)  CM_LOG_IF(CM_TRACE_LEVEL_DETAIL, "DETAIL: ", condition, str)
+
+#define LOG_EVERY_N_VARNAME_CONCAT(base, line) base ## line
+#define LOG_EVERY_N_VARNAME(base, line) LOG_EVERY_N_VARNAME_CONCAT(base, line)
+#define LOG_OCCURRENCES LOG_EVERY_N_VARNAME(occurrences_, __LINE__)
+#define LOG_OCCURRENCES_MOD_N LOG_EVERY_N_VARNAME(occurrences_mod_n_, __LINE__)
+
+#define CM_LOG_EVERY_N(mask, level, n, str) \
+    static int LOG_OCCURRENCES = 0, LOG_OCCURRENCES_MOD_N = 0; \
+    ++LOG_OCCURRENCES; \
+    if (++LOG_OCCURRENCES_MOD_N > n) LOG_OCCURRENCES_MOD_N -= n; \
+    if (LOG_OCCURRENCES_MOD_N == 1) UTIL_ADAPTER_TRACE(mask, level, str)
+
+#define CM_EVERY_N_ERROR_TRACE(n, str)   CM_LOG_EVERY_N(CM_TRACE_LEVEL_ERROR, "ERROR: ", n, str<<FILE_LINE)
+#define CM_EVERY_N_WARNING_TRACE(n, str) CM_LOG_EVERY_N(CM_TRACE_LEVEL_WARNING, "WARNING: ", n, str<<FILE_LINE)
+#define CM_EVERY_N_INFO_TRACE(n, str)    CM_LOG_EVERY_N(CM_TRACE_LEVEL_INFO, "INFO: ", n, str)
+#define CM_EVERY_N_DEBUG_TRACE(n, str)   CM_LOG_EVERY_N(CM_TRACE_LEVEL_DEBUG, "DEBUG: ", n, str)
+#define CM_EVERY_N_DETAIL_TRACE(n, str)  CM_LOG_EVERY_N(CM_TRACE_LEVEL_DETAIL, "DETAIL: ", n, str)
+
+#define CM_LOG_IF_EVERY_N(mask, level, condition, n, str) \
+    static int LOG_OCCURRENCES = 0, LOG_OCCURRENCES_MOD_N = 0; \
+    ++LOG_OCCURRENCES; \
+    if (condition && \
+        ((LOG_OCCURRENCES_MOD_N=(LOG_OCCURRENCES_MOD_N + 1) % n) == (1 % n))) \
+        UTIL_ADAPTER_TRACE(mask, level, str)
+
+#define CM_IF_EVERY_N_ERROR_TRACE(condition, n, str)   CM_LOG_IF_EVERY_N(CM_TRACE_LEVEL_ERROR, "ERROR: ", condition, n, str<<FILE_LINE)
+#define CM_IF_EVERY_N_WARNING_TRACE(condition, n, str) CM_LOG_IF_EVERY_N(CM_TRACE_LEVEL_WARNING, "WARNING: ", condition, n, str<<FILE_LINE)
+#define CM_IF_EVERY_N_INFO_TRACE(condition, n, str)    CM_LOG_IF_EVERY_N(CM_TRACE_LEVEL_INFO, "INFO: ", condition, n, str)
+#define CM_IF_EVERY_N_DEBUG_TRACE(condition, n, str)   CM_LOG_IF_EVERY_N(CM_TRACE_LEVEL_DEBUG, "DEBUG: ", condition, n, str)
+#define CM_IF_EVERY_N_DETAIL_TRACE(condition, n, str)  CM_LOG_IF_EVERY_N(CM_TRACE_LEVEL_DETAIL, "DETAIL: ", condition, n, str)
+
+// WARNING: It is your duty to supply the counter, just give the variable pointer, the macro will modify its value
+#define CM_LOG_FIRST_N(mask, level, counter_ptr, n, str) \
+  if ((*counter_ptr) < n) { \
+    ++(*counter_ptr); \
+    UTIL_ADAPTER_TRACE(mask, level, str); }
+
+#define CM_FIRST_N_ERROR_TRACE(counter_ptr, n, str)   CM_LOG_FIRST_N(CM_TRACE_LEVEL_ERROR, "ERROR: ", counter_ptr, n, str<<FILE_LINE)
+#define CM_FIRST_N_WARNING_TRACE(counter_ptr, n, str) CM_LOG_FIRST_N(CM_TRACE_LEVEL_WARNING, "WARNING: ", counter_ptr, n, str<<FILE_LINE)
+#define CM_FIRST_N_INFO_TRACE(counter_ptr, n, str)    CM_LOG_FIRST_N(CM_TRACE_LEVEL_INFO, "INFO: ", counter_ptr, n, str)
+#define CM_FIRST_N_DEBUG_TRACE(counter_ptr, n, str)   CM_LOG_FIRST_N(CM_TRACE_LEVEL_DEBUG, "DEBUG: ", counter_ptr, n, str)
+#define CM_FIRST_N_DETAIL_TRACE(counter_ptr, n, str)  CM_LOG_FIRST_N(CM_TRACE_LEVEL_DETAIL, "DETAIL: ", counter_ptr, n, str)
+
 /*
  *  Function pointer declaration for various tool sets
  */
