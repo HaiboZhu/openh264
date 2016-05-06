@@ -162,12 +162,12 @@ int main (int argc, char* argv[]) {
 
 
   //***For auto testing of encoder performance, call auto test here, if you not want to do auto test, you can comment it manualy
-
-  if (AutoTestEnc() == 0)
-    NSLog (@"Auto testing running sucessfully");
-  else
-    NSLog (@"Auto testing running failed");
-  abort();
+//
+//  if (AutoTestEnc() == 0)
+//    NSLog (@"Auto testing running sucessfully");
+//  else
+//    NSLog (@"Auto testing running failed");
+//  abort();
   //************************
   @autoreleasepool {
     return UIApplicationMain (argc, argv, nil, NSStringFromClass ([AppDelegate class]));

@@ -58,7 +58,7 @@ extern int EncMain(int argc, char **argv);
     NSBundle * bundle = [NSBundle mainBundle];
     NSString * encCfg = [bundle pathForResource:@"welsenc_ios" ofType:@"cfg"];
     NSString * dlayerCfg = [bundle pathForResource:@"layer2" ofType:@"cfg"];
-    NSString * yuvFile = [bundle pathForResource:@"CiscoVT2people_320x192_12fps" ofType:@"yuv"];
+    NSString * yuvFile = [bundle pathForResource:@"iphone5A1429_sitting_1280x720" ofType:@"yuv"];
     NSString * bsfile = [NSString stringWithFormat:@"%@/%@", [self getPathForWrite], @"test.264"];
     NSLog(@"WELS_INFO: enc config file: %@, yuv file %@", encCfg, yuvFile);
     const char * argv[] = {

@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		14820F411CDC222E0048EA84 /* iphone5A1429_sitting_1280x720.yuv in Resources */ = {isa = PBXBuildFile; fileRef = 14820F401CDC222E0048EA84 /* iphone5A1429_sitting_1280x720.yuv */; };
 		544F0DC4196F86F50092FC6F /* libprocessing.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 544F0DC3196F86EF0092FC6F /* libprocessing.a */; };
 		FAA3D9D318BD729500BCD52D /* welsenc_ios.cfg in Resources */ = {isa = PBXBuildFile; fileRef = FAA3D9D218BD729500BCD52D /* welsenc_ios.cfg */; };
-		FAA3D9D818BD777100BCD52D /* CiscoVT2people_320x192_12fps.yuv in Resources */ = {isa = PBXBuildFile; fileRef = FAA3D9D718BD777100BCD52D /* CiscoVT2people_320x192_12fps.yuv */; };
 		FAA3D9DD18BD8A5600BCD52D /* layer2.cfg in Resources */ = {isa = PBXBuildFile; fileRef = FAA3D9DC18BD8A5600BCD52D /* layer2.cfg */; };
 		FAFB4FA918BC8DD700315438 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFB4FA818BC8DD700315438 /* Foundation.framework */; };
 		FAFB4FAB18BC8DD700315438 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFB4FAA18BC8DD700315438 /* CoreGraphics.framework */; };
@@ -73,9 +73,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		14820F401CDC222E0048EA84 /* iphone5A1429_sitting_1280x720.yuv */ = {isa = PBXFileReference; lastKnownFileType = file; name = iphone5A1429_sitting_1280x720.yuv; path = ../../../../../../res/iphone5A1429_sitting_1280x720.yuv; sourceTree = "<group>"; };
 		544F0DB9196F85F20092FC6F /* processing.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = processing.xcodeproj; path = ../../processing/processing.xcodeproj; sourceTree = "<group>"; };
 		FAA3D9D218BD729500BCD52D /* welsenc_ios.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = welsenc_ios.cfg; path = ../../../../../../testbin/welsenc_ios.cfg; sourceTree = "<group>"; };
-		FAA3D9D718BD777100BCD52D /* CiscoVT2people_320x192_12fps.yuv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CiscoVT2people_320x192_12fps.yuv; path = ../../../../../../res/CiscoVT2people_320x192_12fps.yuv; sourceTree = "<group>"; };
 		FAA3D9DC18BD8A5600BCD52D /* layer2.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = layer2.cfg; path = ../../../../../../testbin/layer2.cfg; sourceTree = "<group>"; };
 		FAFB4FA518BC8DD700315438 /* encDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = encDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAFB4FA818BC8DD700315438 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -173,8 +173,8 @@
 		FAFB4FAF18BC8DD700315438 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				14820F401CDC222E0048EA84 /* iphone5A1429_sitting_1280x720.yuv */,
 				FAA3D9DC18BD8A5600BCD52D /* layer2.cfg */,
-				FAA3D9D718BD777100BCD52D /* CiscoVT2people_320x192_12fps.yuv */,
 				FAA3D9D218BD729500BCD52D /* welsenc_ios.cfg */,
 				FAFB4FB018BC8DD700315438 /* encDemo-Info.plist */,
 				FAFB4FB118BC8DD700315438 /* InfoPlist.strings */,
@@ -326,8 +326,8 @@
 				FAFB4FC418BC8DD700315438 /* Images.xcassets in Resources */,
 				FAFB4FBC18BC8DD700315438 /* Main_iPhone.storyboard in Resources */,
 				FAA3D9DD18BD8A5600BCD52D /* layer2.cfg in Resources */,
-				FAA3D9D818BD777100BCD52D /* CiscoVT2people_320x192_12fps.yuv in Resources */,
 				FAFB4FB318BC8DD700315438 /* InfoPlist.strings in Resources */,
+				14820F411CDC222E0048EA84 /* iphone5A1429_sitting_1280x720.yuv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

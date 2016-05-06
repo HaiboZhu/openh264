@@ -1042,6 +1042,7 @@ int main (int argc, char** argv)
 #endif
 {
   ISVCEncoder* pSVCEncoder = NULL;
+start:
   int iRet = 0;
 
 #ifdef _MSC_VER
@@ -1083,6 +1084,7 @@ int main (int argc, char** argv)
   }
 
   DestroySVCEncHandle (pSVCEncoder);
+goto start;
   return 0;
 
 exit:
