@@ -8,6 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		14820F411CDC222E0048EA84 /* iphone5A1429_sitting_1280x720.yuv in Resources */ = {isa = PBXBuildFile; fileRef = 14820F401CDC222E0048EA84 /* iphone5A1429_sitting_1280x720.yuv */; };
+		14820F521CDFA5250048EA84 /* layer20.cfg in Resources */ = {isa = PBXBuildFile; fileRef = 14820F4E1CDFA5250048EA84 /* layer20.cfg */; };
+		14820F531CDFA5250048EA84 /* layer21.cfg in Resources */ = {isa = PBXBuildFile; fileRef = 14820F4F1CDFA5250048EA84 /* layer21.cfg */; };
+		14820F541CDFA5250048EA84 /* welsenc_ios0.cfg in Resources */ = {isa = PBXBuildFile; fileRef = 14820F501CDFA5250048EA84 /* welsenc_ios0.cfg */; };
+		14820F551CDFA5250048EA84 /* welsenc_ios1.cfg in Resources */ = {isa = PBXBuildFile; fileRef = 14820F511CDFA5250048EA84 /* welsenc_ios1.cfg */; };
+		14820F5F1CE104B10048EA84 /* iphone5A1429_sitting_1280x720_2.yuv in Resources */ = {isa = PBXBuildFile; fileRef = 14820F5E1CE104B10048EA84 /* iphone5A1429_sitting_1280x720_2.yuv */; };
+		14820F611CE106560048EA84 /* CiscoVT2people_320x192_12fps.yuv in Resources */ = {isa = PBXBuildFile; fileRef = 14820F601CE106560048EA84 /* CiscoVT2people_320x192_12fps.yuv */; };
+		14E373A01CEBB3E200C378E0 /* libwelsdec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14F7C0251CE467F2006613B4 /* libwelsdec.a */; };
 		544F0DC4196F86F50092FC6F /* libprocessing.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 544F0DC3196F86EF0092FC6F /* libprocessing.a */; };
 		FAA3D9D318BD729500BCD52D /* welsenc_ios.cfg in Resources */ = {isa = PBXBuildFile; fileRef = FAA3D9D218BD729500BCD52D /* welsenc_ios.cfg */; };
 		FAA3D9DD18BD8A5600BCD52D /* layer2.cfg in Resources */ = {isa = PBXBuildFile; fileRef = FAA3D9DC18BD8A5600BCD52D /* layer2.cfg */; };
@@ -28,6 +35,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		14E3739D1CEBB3AD00C378E0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14F7C0201CE467F2006613B4 /* welsdec.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 4CE4427818B6FC360017DF25;
+			remoteInfo = welsdec;
+		};
+		14F7C0241CE467F2006613B4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14F7C0201CE467F2006613B4 /* welsdec.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4CE4427918B6FC360017DF25;
+			remoteInfo = welsdec;
+		};
 		544F0DBF196F86EF0092FC6F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 544F0DB9196F85F20092FC6F /* processing.xcodeproj */;
@@ -74,6 +95,13 @@
 
 /* Begin PBXFileReference section */
 		14820F401CDC222E0048EA84 /* iphone5A1429_sitting_1280x720.yuv */ = {isa = PBXFileReference; lastKnownFileType = file; name = iphone5A1429_sitting_1280x720.yuv; path = ../../../../../../res/iphone5A1429_sitting_1280x720.yuv; sourceTree = "<group>"; };
+		14820F4E1CDFA5250048EA84 /* layer20.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = layer20.cfg; path = ../../../../../../testbin/layer20.cfg; sourceTree = "<group>"; };
+		14820F4F1CDFA5250048EA84 /* layer21.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = layer21.cfg; path = ../../../../../../testbin/layer21.cfg; sourceTree = "<group>"; };
+		14820F501CDFA5250048EA84 /* welsenc_ios0.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = welsenc_ios0.cfg; path = ../../../../../../testbin/welsenc_ios0.cfg; sourceTree = "<group>"; };
+		14820F511CDFA5250048EA84 /* welsenc_ios1.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = welsenc_ios1.cfg; path = ../../../../../../testbin/welsenc_ios1.cfg; sourceTree = "<group>"; };
+		14820F5E1CE104B10048EA84 /* iphone5A1429_sitting_1280x720_2.yuv */ = {isa = PBXFileReference; lastKnownFileType = file; name = iphone5A1429_sitting_1280x720_2.yuv; path = ../../../../../../res/iphone5A1429_sitting_1280x720_2.yuv; sourceTree = "<group>"; };
+		14820F601CE106560048EA84 /* CiscoVT2people_320x192_12fps.yuv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CiscoVT2people_320x192_12fps.yuv; path = ../../../../../../res/CiscoVT2people_320x192_12fps.yuv; sourceTree = "<group>"; };
+		14F7C0201CE467F2006613B4 /* welsdec.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = welsdec.xcodeproj; path = ../../dec/welsdec/welsdec.xcodeproj; sourceTree = "<group>"; };
 		544F0DB9196F85F20092FC6F /* processing.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = processing.xcodeproj; path = ../../processing/processing.xcodeproj; sourceTree = "<group>"; };
 		FAA3D9D218BD729500BCD52D /* welsenc_ios.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = welsenc_ios.cfg; path = ../../../../../../testbin/welsenc_ios.cfg; sourceTree = "<group>"; };
 		FAA3D9DC18BD8A5600BCD52D /* layer2.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = layer2.cfg; path = ../../../../../../testbin/layer2.cfg; sourceTree = "<group>"; };
@@ -104,6 +132,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14E373A01CEBB3E200C378E0 /* libwelsdec.a in Frameworks */,
 				544F0DC4196F86F50092FC6F /* libprocessing.a in Frameworks */,
 				FAFB500518BC8F1500315438 /* libwelsenc.a in Frameworks */,
 				FAFB500318BC8F0D00315438 /* libcommon.a in Frameworks */,
@@ -116,6 +145,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		14F7C0211CE467F2006613B4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				14F7C0251CE467F2006613B4 /* libwelsdec.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		544F0DBA196F85F20092FC6F /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -144,6 +181,7 @@
 		FAFB4FA718BC8DD700315438 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				14F7C0201CE467F2006613B4 /* welsdec.xcodeproj */,
 				544F0DB9196F85F20092FC6F /* processing.xcodeproj */,
 				FAFB4FEB18BC8E8600315438 /* common.xcodeproj */,
 				FAFB4FE218BC8E7C00315438 /* welsenc.xcodeproj */,
@@ -173,6 +211,12 @@
 		FAFB4FAF18BC8DD700315438 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				14820F601CE106560048EA84 /* CiscoVT2people_320x192_12fps.yuv */,
+				14820F5E1CE104B10048EA84 /* iphone5A1429_sitting_1280x720_2.yuv */,
+				14820F4E1CDFA5250048EA84 /* layer20.cfg */,
+				14820F4F1CDFA5250048EA84 /* layer21.cfg */,
+				14820F501CDFA5250048EA84 /* welsenc_ios0.cfg */,
+				14820F511CDFA5250048EA84 /* welsenc_ios1.cfg */,
 				14820F401CDC222E0048EA84 /* iphone5A1429_sitting_1280x720.yuv */,
 				FAA3D9DC18BD8A5600BCD52D /* layer2.cfg */,
 				FAA3D9D218BD729500BCD52D /* welsenc_ios.cfg */,
@@ -242,6 +286,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				14E3739E1CEBB3AD00C378E0 /* PBXTargetDependency */,
 				544F0DC0196F86EF0092FC6F /* PBXTargetDependency */,
 				FAFB500218BC8EB200315438 /* PBXTargetDependency */,
 				FAFB4FFE18BC8EAA00315438 /* PBXTargetDependency */,
@@ -281,6 +326,10 @@
 					ProjectRef = 544F0DB9196F85F20092FC6F /* processing.xcodeproj */;
 				},
 				{
+					ProductGroup = 14F7C0211CE467F2006613B4 /* Products */;
+					ProjectRef = 14F7C0201CE467F2006613B4 /* welsdec.xcodeproj */;
+				},
+				{
 					ProductGroup = FAFB4FE318BC8E7C00315438 /* Products */;
 					ProjectRef = FAFB4FE218BC8E7C00315438 /* welsenc.xcodeproj */;
 				},
@@ -293,6 +342,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		14F7C0251CE467F2006613B4 /* libwelsdec.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libwelsdec.a;
+			remoteRef = 14F7C0241CE467F2006613B4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		544F0DC3196F86EF0092FC6F /* libprocessing.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -321,13 +377,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14820F531CDFA5250048EA84 /* layer21.cfg in Resources */,
+				14820F521CDFA5250048EA84 /* layer20.cfg in Resources */,
 				FAFB4FBF18BC8DD700315438 /* Main_iPad.storyboard in Resources */,
 				FAA3D9D318BD729500BCD52D /* welsenc_ios.cfg in Resources */,
 				FAFB4FC418BC8DD700315438 /* Images.xcassets in Resources */,
+				14820F551CDFA5250048EA84 /* welsenc_ios1.cfg in Resources */,
 				FAFB4FBC18BC8DD700315438 /* Main_iPhone.storyboard in Resources */,
+				14820F5F1CE104B10048EA84 /* iphone5A1429_sitting_1280x720_2.yuv in Resources */,
 				FAA3D9DD18BD8A5600BCD52D /* layer2.cfg in Resources */,
 				FAFB4FB318BC8DD700315438 /* InfoPlist.strings in Resources */,
 				14820F411CDC222E0048EA84 /* iphone5A1429_sitting_1280x720.yuv in Resources */,
+				14820F541CDFA5250048EA84 /* welsenc_ios0.cfg in Resources */,
+				14820F611CE106560048EA84 /* CiscoVT2people_320x192_12fps.yuv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,6 +411,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		14E3739E1CEBB3AD00C378E0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = welsdec;
+			targetProxy = 14E3739D1CEBB3AD00C378E0 /* PBXContainerItemProxy */;
+		};
 		544F0DC0196F86EF0092FC6F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = processing;

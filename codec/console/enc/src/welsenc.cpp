@@ -36,6 +36,7 @@
 #include <assert.h>
 #include <signal.h>
 #include <stdarg.h>
+#include <pthread.h>
 #if defined (ANDROID_NDK)
 #include <android/log.h>
 #endif
@@ -1032,6 +1033,165 @@ void DestroySVCEncHandle (ISVCEncoder* pEncoder) {
   }
 }
 
+
+void *runOneEncDemo(void *data) {
+    
+    char **argv = (char **)data;
+    
+    int iRet = 0;
+    long lRet = 0;
+    int32_t iWidth = 1280;
+    int32_t iHeight = 720;
+    int32_t iFrameSize = iWidth * iHeight * 3 / 2;
+    
+    ISVCEncoder* pSVCEncoder = NULL;
+    ISVCDecoder* pSVCDecoder = NULL;
+    
+    int iLevelSetting = (int) 2; // waring
+    
+    uint8_t *pYUVBuf = NULL;
+    pYUVBuf = new uint8_t [iFrameSize * 100];
+    
+    // Read YUV
+    
+    FILE* fp = fopen(argv[3], "rb");
+    fread(pYUVBuf, iFrameSize, 100, fp);
+    fclose(fp);
+    
+    // Create the decoder
+    
+    lRet = WelsCreateDecoder(&pSVCDecoder);
+    if (lRet)
+        return NULL;
+    
+    SDecodingParam sDecParam = {0};
+    sDecParam.sVideoProperty.size = sizeof(sDecParam.sVideoProperty);
+    sDecParam.sVideoProperty.eVideoBsType = VIDEO_BITSTREAM_DEFAULT;
+    sDecParam.bParseOnly = false;
+    
+    pSVCDecoder->SetOption(DECODER_OPTION_TRACE_LEVEL, &iLevelSetting);
+    pSVCDecoder->Initialize(&sDecParam);
+    int32_t iECMode = 7;
+    pSVCDecoder->SetOption(DECODER_OPTION_ERROR_CON_IDC, &iECMode);
+    
+    uint8_t *pBuf;
+    int32_t iSize = 0;
+    uint8_t* pData[3] = {NULL};
+    SBufferInfo sDstBufInfo;
+
+    // Create the encoder
+
+    iRet = WelsCreateSVCEncoder(&pSVCEncoder);
+    if (iRet)
+        return NULL;
+    
+    pSVCEncoder->SetOption(ENCODER_OPTION_TRACE_LEVEL, &iLevelSetting);
+    
+    SEncParamBase sEncParamBase;
+    memset(&sEncParamBase, 0, sizeof(SEncParamBase));
+    sEncParamBase.iPicWidth = 1280;
+    sEncParamBase.iPicHeight = 720;
+    sEncParamBase.iRCMode = RC_QUALITY_MODE;
+    sEncParamBase.iTargetBitrate = 1500000;
+    sEncParamBase.iUsageType = CAMERA_VIDEO_REAL_TIME;
+    sEncParamBase.fMaxFrameRate = 30;
+    
+    iRet = pSVCEncoder->Initialize(&sEncParamBase);
+    
+//    SEncParamExt sEncParamExt;
+//    memset(&sEncParamExt, 0, sizeof(SEncParamExt));
+//    pSVCEncoder->GetDefaultParams(&sEncParamExt);
+//    sEncParamExt.iUsageType =CAMERA_VIDEO_REAL_TIME;
+//    sEncParamExt.fMaxFrameRate = 30.0f;
+//    sEncParamExt.iPicWidth =  1280;
+//    sEncParamExt.iPicHeight = 720;
+//    sEncParamExt.iSpatialLayerNum = 1;
+//    sEncParamExt.sSpatialLayers[0].iVideoWidth = 1280;
+//    sEncParamExt.sSpatialLayers[0].iVideoHeight = 720;
+//    sEncParamExt.sSpatialLayers[0].fFrameRate = 30.0f;
+//    sEncParamExt.sSpatialLayers[0].iSpatialBitrate = 15000;
+//    sEncParamExt.sSpatialLayers[0].sSliceArgument.uiSliceMode = SM_SINGLE_SLICE;
+//    
+//    iRet  = pSVCEncoder->InitializeExt(&sEncParamExt);
+    
+    SFrameBSInfo sFrameBSInfo;
+    SSourcePicture sSrcPic;
+    
+    uint8_t *pTmpYuv = pYUVBuf;
+    int iPos = 0;
+    
+    int64_t iStart = 0, iEnd = 0, iTotal = 0;
+    
+    while (1) {
+        if(iPos==0) {
+            iStart = WelsTime();
+        }
+        memset(&sFrameBSInfo, 0, sizeof(SFrameBSInfo));
+    
+        memset(&sSrcPic, 0, sizeof(SSourcePicture));
+    
+        sSrcPic.iPicHeight = 720;
+        sSrcPic.iPicWidth = 1280;
+        sSrcPic.iColorFormat = videoFormatI420;
+        sSrcPic.iStride[0] = sSrcPic.iPicWidth;
+        sSrcPic.iStride[1] = sSrcPic.iStride[2] = sSrcPic.iPicWidth >> 1;
+        sSrcPic.pData[0] = pTmpYuv;
+        sSrcPic.pData[1] = sSrcPic.pData[0] + sEncParamBase.iPicWidth * sEncParamBase.iPicHeight;
+        sSrcPic.pData[2] = sSrcPic.pData[1] + (sEncParamBase.iPicWidth * sEncParamBase.iPicHeight >> 2);
+    
+        iRet = pSVCEncoder->EncodeFrame(&sSrcPic, &sFrameBSInfo);
+        
+        if (iPos == 99) {
+            iEnd = WelsTime();
+            iTotal = iEnd - iStart;
+            printf("%s FPS is: %f\n", argv[0], 1.0 * 100 * 1e6 / iTotal);
+            iPos= 0;
+            pTmpYuv = pYUVBuf;
+        }
+        else {
+            iPos++;
+            pTmpYuv += iFrameSize;
+        }
+        
+        if (sFrameBSInfo.eFrameType != videoFrameTypeSkip) {
+            pData[0] = pData[1] = pData[2] = NULL;
+            memset (&sDstBufInfo, 0, sizeof(SBufferInfo));
+            iRet = pSVCDecoder->DecodeFrameNoDelay(sFrameBSInfo.sLayerInfo[0].pBsBuf, sFrameBSInfo.iFrameSizeInBytes, pData, &sDstBufInfo);
+        }
+    }
+    
+//
+//    pSVCEncoder = NULL;
+//    iRet = 0;
+//    
+//    iRet = CreateSVCEncHandle (&pSVCEncoder);
+//    if (iRet) {
+//        cout << "WelsCreateSVCEncoder() failed!!" << endl;
+//        return NULL;
+//    }
+//    
+//    //string s0 = "dummy";
+//    //string s1 = (char *)data;
+//    
+//    //const char *argv [] = {s0.c_str(), s1.c_str()};
+//    char **para = (char **)data;
+//    
+//    iRet = ProcessEncoding (pSVCEncoder, 9, para, true);
+//
+//    DestroySVCEncHandle (pSVCEncoder);
+//    
+
+    delete [] pYUVBuf;
+    pYUVBuf = NULL;
+    
+    if (pSVCDecoder) {
+        pSVCDecoder->Uninitialize();
+        WelsDestroyDecoder(pSVCDecoder);
+    }
+    return NULL;
+}
+
+
 /****************************************************************************
  * main:
  ****************************************************************************/
@@ -1041,54 +1201,79 @@ extern "C" int EncMain (int argc, char** argv)
 int main (int argc, char** argv)
 #endif
 {
-  ISVCEncoder* pSVCEncoder = NULL;
-start:
-  int iRet = 0;
+    pthread_t p0, p1;
+    
+    string sCfg = argv[0];    
+    string sOrg = argv[2];
+    string sBit = argv[4];
+    string sLCfg = argv[6];
+    
+    const char *para0[] = {"Codec_0", sCfg.c_str(), "-org", sOrg.c_str(), "-bf", sBit.c_str(), "-numl", "1", "-lconfig", "0", sLCfg.c_str() };
 
-#ifdef _MSC_VER
-  _setmode (_fileno (stdin), _O_BINARY);  /* thanks to Marcoss Morais <morais at dee.ufcg.edu.br> */
-  _setmode (_fileno (stdout), _O_BINARY);
+    pthread_create(&p0, NULL, &runOneEncDemo, (void *)para0);
+    
+     sCfg = argv[1];
+     sOrg = argv[3];
+     sBit = argv[5];
+     sLCfg = argv[7];
+    
+    const char *para1[] = {"Codec_1", sCfg.c_str(), "-org", sOrg.c_str(), "-bf", sBit.c_str(), "-numl", "1", "-lconfig", "0", sLCfg.c_str() };
+    
+    pthread_create(&p1, NULL, &runOneEncDemo, (void *)para1);
+ 
+    pthread_join(p0, NULL);
+    //pthread_join(p1, NULL);
+    
+    return 0;
+//    
+//  ISVCEncoder* pSVCEncoder = NULL;
+//start:
+//  int iRet = 0;
+//
+//#ifdef _MSC_VER
+//  _setmode (_fileno (stdin), _O_BINARY);  /* thanks to Marcoss Morais <morais at dee.ufcg.edu.br> */
+//  _setmode (_fileno (stdout), _O_BINARY);
+//
+//  // remove the LOCK_TO_SINGLE_CORE micro, user need to enable it with manual
+//  // LockToSingleCore();
+//#endif
+//
+//  /* Control-C handler */
+//  signal (SIGINT, SigIntHandler);
+//
+//  iRet = CreateSVCEncHandle (&pSVCEncoder);
+//  if (iRet) {
+//    cout << "WelsCreateSVCEncoder() failed!!" << endl;
+//    goto exit;
+//  }
+//
+//  if (argc < 2) {
+//    goto exit;
+//  } else {
+//    if (!strstr (argv[1], ".cfg")) { // check configuration type (like .cfg?)
+//      if (argc > 2) {
+//        iRet = ProcessEncoding (pSVCEncoder, argc, argv, false);
+//        if (iRet != 0)
+//          goto exit;
+//      } else if (argc == 2 && ! strcmp (argv[1], "-h"))
+//        PrintHelp();
+//      else {
+//        cout << "You specified pCommand is invalid!!" << endl;
+//        goto exit;
+//      }
+//    } else {
+//      iRet = ProcessEncoding (pSVCEncoder, argc, argv, true);
+//      if (iRet > 0)
+//        goto exit;
+//    }
+//  }
+//
+//  DestroySVCEncHandle (pSVCEncoder);
+//goto start;
+//  return 0;
 
-  // remove the LOCK_TO_SINGLE_CORE micro, user need to enable it with manual
-  // LockToSingleCore();
-#endif
-
-  /* Control-C handler */
-  signal (SIGINT, SigIntHandler);
-
-  iRet = CreateSVCEncHandle (&pSVCEncoder);
-  if (iRet) {
-    cout << "WelsCreateSVCEncoder() failed!!" << endl;
-    goto exit;
-  }
-
-  if (argc < 2) {
-    goto exit;
-  } else {
-    if (!strstr (argv[1], ".cfg")) { // check configuration type (like .cfg?)
-      if (argc > 2) {
-        iRet = ProcessEncoding (pSVCEncoder, argc, argv, false);
-        if (iRet != 0)
-          goto exit;
-      } else if (argc == 2 && ! strcmp (argv[1], "-h"))
-        PrintHelp();
-      else {
-        cout << "You specified pCommand is invalid!!" << endl;
-        goto exit;
-      }
-    } else {
-      iRet = ProcessEncoding (pSVCEncoder, argc, argv, true);
-      if (iRet > 0)
-        goto exit;
-    }
-  }
-
-  DestroySVCEncHandle (pSVCEncoder);
-goto start;
-  return 0;
-
-exit:
-  DestroySVCEncHandle (pSVCEncoder);
-  PrintHelp();
-  return 1;
+//exit:
+//  DestroySVCEncHandle (pSVCEncoder);
+//  PrintHelp();
+//  return 1;
 }

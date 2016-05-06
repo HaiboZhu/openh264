@@ -56,25 +56,27 @@ extern int EncMain(int argc, char **argv);
 - (IBAction) buttonPressed:(id)sender
 {
     NSBundle * bundle = [NSBundle mainBundle];
-    NSString * encCfg = [bundle pathForResource:@"welsenc_ios" ofType:@"cfg"];
-    NSString * dlayerCfg = [bundle pathForResource:@"layer2" ofType:@"cfg"];
-    NSString * yuvFile = [bundle pathForResource:@"iphone5A1429_sitting_1280x720" ofType:@"yuv"];
-    NSString * bsfile = [NSString stringWithFormat:@"%@/%@", [self getPathForWrite], @"test.264"];
-    NSLog(@"WELS_INFO: enc config file: %@, yuv file %@", encCfg, yuvFile);
+    NSString * encCfg0 = [bundle pathForResource:@"welsenc_ios0" ofType:@"cfg"];
+    NSString * encCfg1 = [bundle pathForResource:@"welsenc_ios1" ofType:@"cfg"];
+    NSString * dlayerCfg0 = [bundle pathForResource:@"layer20" ofType:@"cfg"];
+    NSString * dlayerCfg1 = [bundle pathForResource:@"layer21" ofType:@"cfg"];
+    NSString * yuvFile0 = [bundle pathForResource:@"iphone5A1429_sitting_1280x720" ofType:@"yuv"];
+    NSString * yuvFile1 = [bundle pathForResource:@"iphone5A1429_sitting_1280x720_2" ofType:@"yuv"];
+    NSString * bsfile0 = [NSString stringWithFormat:@"%@/%@", [self getPathForWrite], @"test0.264"];
+    NSString * bsfile1 = [NSString stringWithFormat:@"%@/%@", [self getPathForWrite], @"test1.264"];
+    NSLog(@"WELS_INFO: enc config file: %@, yuv file %@", encCfg0, yuvFile0);
+    NSLog(@"WELS_INFO: enc config file: %@, yuv file %@", encCfg1, yuvFile1);
     const char * argv[] = {
-        "dummy",
-        [encCfg UTF8String],
-        "-org",
-        [yuvFile UTF8String],
-        "-bf",
-        [bsfile UTF8String],
-        "-numl",
-        "1",
-        "-lconfig",
-        "0",
-        [dlayerCfg UTF8String],
+        [encCfg0 UTF8String],
+        [encCfg1 UTF8String],
+        [yuvFile0 UTF8String],
+        [yuvFile1 UTF8String],
+        [bsfile0 UTF8String],
+        [bsfile1 UTF8String],
+        [dlayerCfg0 UTF8String],
+        [dlayerCfg1 UTF8String]
     };
-    NSLog(@"WELS_INFO: enc config file: %@", encCfg);
+    //SLog(@"WELS_INFO: enc config file: %@", encCfg0);
     EncMain(sizeof(argv)/sizeof(argv[0]), (char**)&argv[0]);
     statusText_.text = @"Status: Test Over";
 }
