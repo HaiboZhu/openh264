@@ -69,7 +69,17 @@ int    g_iDecodedFrameNum = 0;
 #endif
 //using namespace WelsDec;
 
-//#define NO_DELAY_DECODING // For Demo interfaces test with no delay decoding
+#define NO_DELAY_DECODING // For Demo interfaces test with no delay decoding
+
+#define PARSE_ONLY
+//
+//#ifdef PARSE_ONLY
+//
+//#ifndef NO_DELAY_DECODING
+//#define NO_DELAY_DECODING // bParseOnly always run on twice-call
+//#endif
+//
+//#endif
 
 void H264DecodeInstance (ISVCDecoder* pDecoder, const char* kpH264FileName, const char* kpOuputFileName,
                          int32_t& iWidth, int32_t& iHeight, const char* pOptionFileName, const char* pLengthFileName) {
@@ -95,6 +105,18 @@ void H264DecodeInstance (ISVCDecoder* pDecoder, const char* kpH264FileName, cons
   uint8_t* pData[3] = {NULL};
   uint8_t* pDst[3] = {NULL};
   SBufferInfo sDstBufInfo;
+  
+#ifdef PARSE_ONLY
+  SParserBsInfo sParserBsInfo;
+  FILE* fpOutBitFile = NULL;
+  if (kpOuputFileName != NULL) {
+    fpOutBitFile = fopen(kpOuputFileName, "wb");
+  }
+  if (fpOutBitFile == NULL) {
+    printf("NO output file or create file failed. Quit.\n");
+    return;
+  }
+#endif
 
   int32_t iBufPos = 0;
   int32_t iFileSize;
@@ -216,6 +238,23 @@ void H264DecodeInstance (ISVCDecoder* pDecoder, const char* kpH264FileName, cons
     pData[1] = NULL;
     pData[2] = NULL;
     uiTimeStamp ++;
+    
+#ifdef PARSE_ONLY
+    memset(&sParserBsInfo, 0, sizeof(SParserBsInfo));
+    sParserBsInfo.uiInBsTimeStamp = uiTimeStamp;
+    pDecoder->DecodeParser(pBuf + iBufPos, iSliceSize, &sParserBsInfo);
+    
+    if (sParserBsInfo.iNalNum > 0) {//output the parsed bitstream
+      unsigned long uiTotalLen = 0;
+      printf("Current SPS width/height is: %d / %d\n", sParserBsInfo.iSpsWidthInPixel, sParserBsInfo.iSpsHeightInPixel);
+      for (int i=0; i<sParserBsInfo.iNalNum; i++) {
+        printf("Output the Nal size = %d\n", sParserBsInfo.iNalLenInByte[i]);
+        uiTotalLen += sParserBsInfo.iNalLenInByte[i];
+      }
+      fwrite(sParserBsInfo.pDstBuff, uiTotalLen, 1, fpOutBitFile);
+    }
+    
+#else
     memset (&sDstBufInfo, 0, sizeof (SBufferInfo));
     sDstBufInfo.uiInBsTimeStamp = uiTimeStamp;
 #ifndef NO_DELAY_DECODING
@@ -247,7 +286,24 @@ void H264DecodeInstance (ISVCDecoder* pDecoder, const char* kpH264FileName, cons
       }
       ++ iFrameCount;
     }
+#endif
 
+#ifdef PARSE_ONLY
+    memset(&sParserBsInfo, 0, sizeof(SParserBsInfo));
+    sParserBsInfo.uiInBsTimeStamp = uiTimeStamp;
+    pDecoder->DecodeParser(pBuf + iBufPos, iSliceSize, &sParserBsInfo);
+    
+    if (sParserBsInfo.iNalNum > 0) {//output the parsed bitstream
+      unsigned long uiTotalLen = 0;
+      printf("Current SPS width/height is: %d / %d\n", sParserBsInfo.iSpsWidthInPixel, sParserBsInfo.iSpsHeightInPixel);
+      for (int i=0; i<sParserBsInfo.iNalNum; i++) {
+        printf("Output the Nal size = %d\n", sParserBsInfo.iNalLenInByte[i]);
+        uiTotalLen += sParserBsInfo.iNalLenInByte[i];
+      }
+      fwrite(sParserBsInfo.pDstBuff, uiTotalLen, 1, fpOutBitFile);
+    }
+#else
+    
 #ifdef NO_DELAY_DECODING
     iStart = WelsTime();
     pData[0] = NULL;
@@ -279,6 +335,7 @@ void H264DecodeInstance (ISVCDecoder* pDecoder, const char* kpH264FileName, cons
       }
       ++ iFrameCount;
     }
+#endif
 #endif
     iBufPos += iSliceSize;
     ++ iSliceIndex;
@@ -318,6 +375,10 @@ label_exit:
   if (pOptionFile) {
     fclose (pOptionFile);
     pOptionFile = NULL;
+  }
+  if (fpOutBitFile) {
+    fclose(fpOutBitFile);
+    fpOutBitFile = NULL;
   }
 }
 
@@ -444,6 +505,10 @@ int32_t main (int32_t iArgC, char* pArgV[]) {
   if (iLevelSetting >= 0) {
     pDecoder->SetOption (DECODER_OPTION_TRACE_LEVEL, &iLevelSetting);
   }
+  
+#ifdef PARSE_ONLY
+  sDecParam.bParseOnly = true;
+#endif
 
   if (pDecoder->Initialize (&sDecParam)) {
     printf ("Decoder initialization failed.\n");
